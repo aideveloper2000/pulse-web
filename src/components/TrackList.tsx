@@ -15,8 +15,8 @@ import { PlaylistPicker } from './PlaylistPicker';
 const COL = {
   index: 'w-6 shrink-0',
   title: 'min-w-0 flex-1',
-  album: 'hidden w-48 shrink-0 md:block',
-  plays: 'hidden w-16 shrink-0 lg:block',
+  album: 'hidden w-48 shrink-0 lg:block',
+  plays: 'hidden w-16 shrink-0 xl:block',
   like: 'w-7 shrink-0',
   duration: 'w-12 shrink-0',
   menu: 'w-7 shrink-0',
@@ -52,7 +52,7 @@ export function TrackList({
   return (
     <div className="flex flex-col">
       {showAlbum && showPlays && (
-        <div className="flex items-center gap-3 border-b border-line px-3 pb-2 text-[11px] font-bold uppercase tracking-wider text-faint">
+        <div className="flex items-center gap-3 border-b border-line px-3 pb-2 text-[11px] font-bold uppercase tracking-wider text-muted">
           <span className={`${COL.index} text-center`}>#</span>
           <span className={COL.title}>Title</span>
           <span className={COL.album}>Album</span>
