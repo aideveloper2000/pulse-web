@@ -59,24 +59,4 @@ export function pluralise(n: number, word: string): string {
   return `${n} ${word}${n === 1 ? '' : 's'}`;
 }
 
-/** Deterministic gradient pair for covers that have no artwork. */
-const COVER_GRADIENTS: Array<[string, string]> = [
-  ['#1ee06f', '#0b5c33'],
-  ['#f59e0b', '#7c2d12'],
-  ['#ff7a59', '#7a2a18'],
-  ['#60a5fa', '#1e3a8a'],
-  ['#f472b6', '#831843'],
-  ['#facc15', '#7a5a12'],
-  ['#34d399', '#0b5c46'],
-  ['#fb7185', '#7f1d1d'],
-];
 
-export function coverGradient(seed: string | number): string {
-  const key = String(seed);
-  let hash = 0;
-  for (let i = 0; i < key.length; i++) {
-    hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
-  }
-  const [from, to] = COVER_GRADIENTS[hash % COVER_GRADIENTS.length];
-  return `linear-gradient(135deg, ${from} 0%, ${to} 100%)`;
-}

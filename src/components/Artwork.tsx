@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { coverGradient } from '../lib/format';
+import { Music } from 'lucide-react';
 
 interface ArtworkProps {
   src?: string | null;
@@ -9,22 +9,21 @@ interface ArtworkProps {
   rounded?: string;
 }
 
-/** Cover art with a deterministic gradient fallback when no image exists. */
+/** Cover art with a quiet neutral placeholder when no image exists. */
 export function Artwork({
   src,
   title,
   seed,
   className = '',
-  rounded = 'rounded-md',
+  rounded = 'rounded-xl',
 }: ArtworkProps) {
   const [failed, setFailed] = useState(false);
   const showImage = Boolean(src) && !failed;
-  const initial = (title ?? String(seed)).trim().charAt(0).toUpperCase() || 'P';
 
   return (
     <div
-      className={`relative shrink-0 overflow-hidden ${rounded} ${className}`}
-      style={{ background: coverGradient(seed) }}
+      className={`relative shrink-0 overflow-hidden bg-raised ${rounded} ${className}`}
+      style={{ background: 'linear-gradient(135deg, #1c1c26 0%, #14141c 100%)' }}
     >
       {showImage ? (
         <img
@@ -36,8 +35,8 @@ export function Artwork({
           onError={() => setFailed(true)}
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center">
-          <span className="text-[1.6em] font-black leading-none text-white/90">{initial}</span>
+        <div className="flex h-full w-full items-center justify-center text-faint">
+          <Music size="1.5em" />
         </div>
       )}
     </div>

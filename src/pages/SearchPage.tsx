@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Disc3, Mic2, SearchX } from 'lucide-react';
 import type { Album, Artist, Track } from '../lib/types';
-import { fetchGenreStats, search } from '../lib/api';
+import { fetchGenreStats, fetchTrending, search } from '../lib/api';
 import type { GenreStat, SearchResults } from '../lib/api';
 import { usePlayer } from '../store/player';
 import { useLikedTracks } from '../lib/useLikedTracks';
@@ -15,25 +15,31 @@ export function SearchPage() {
   const query = params.get('q') ?? '';
   const [results, setResults] = useState<SearchResults | null>(null);
   const [genres, setGenres] = useState<GenreStat[]>([]);
+  const [trending, setTrending] = useState<Track[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { likedIds, toggle } = useLikedTracks();
   const toast = useToasts((s) => s.push);
 
   useEffect(() => {
     let active = true;
     setLoading(true);
+    setError(null);
     const timer = setTimeout(async () => {
       try {
         if (query.trim()) {
           const found = await search(query, 40);
           if (active) setResults(found);
         } else {
-          const stats = await fetchGenreStats();
+          const [stats, trend] = await Promise.all([fetchGenreStats(), fetchTrending(6)]);
           if (active) {
             setGenres(stats);
+            setTrending(trend);
             setResults(null);
           }
         }
+      } catch {
+        if (active) setError('Search failed. Check your connection and retry.');
       } finally {
         if (active) setLoading(false);
       }
@@ -55,21 +61,45 @@ export function SearchPage() {
 
   if (!query.trim()) {
     return (
-      <div className="flex flex-col gap-6 px-1 pt-2">
+      <div className="flex flex-col gap-8 px-1 pt-2">
         <div>
           <h1 className="text-2xl font-black tracking-tight sm:text-3xl">Search</h1>
           <p className="mt-1 text-sm text-muted">Browse the catalog by genre, or search above.</p>
         </div>
-        <Section title="All genres">
+
+        {error && (
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger animate-pop">
+            <span>{error}</span>
+            <button
+              onClick={() => window.location.reload()}
+              className="rounded-full border border-danger/40 px-3 py-1 text-xs font-bold hover:bg-danger/10"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
+        <section className="flex flex-col gap-3">
+          <h2 className="px-1 text-xl font-bold tracking-tight">All genres</h2>
           {loading ? (
-            <div className="flex gap-4">
-              {Array.from({ length: 6 }, (_, i) => (
-                <div key={i} className="h-[88px] w-[220px] shrink-0 animate-pulse rounded-xl bg-white/[0.06]" />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {Array.from({ length: 8 }, (_, i) => (
+                <div key={i} className="h-[68px] animate-pulse rounded-xl bg-white/[0.06]" />
               ))}
             </div>
           ) : (
-            genres.map((genre) => <GenreCard key={genre.genre} genre={genre.genre} count={genre.track_count} />)
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {genres.map((genre) => (
+                <GenreCard key={genre.genre} genre={genre.genre} count={genre.track_count} />
+              ))}
+            </div>
           )}
+        </section>
+
+        <Section title="Trending right now" subtitle="The most played tracks on Pulse">
+          <div className="w-full min-w-0 rounded-xl border border-line bg-raised/60 px-2 py-1">
+            <TrackList tracks={trending.slice(0, 6)} showPlays />
+          </div>
         </Section>
       </div>
     );

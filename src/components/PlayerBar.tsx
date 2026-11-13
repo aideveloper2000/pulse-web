@@ -82,18 +82,18 @@ export function PlayerBar() {
   const VolumeIcon = muted || volume === 0 ? VolumeX : volume < 0.5 ? Volume1 : Volume2;
 
   return (
-    <footer className="flex h-[92px] shrink-0 items-center gap-4 border-t border-line bg-surface px-4">
-      <div className="flex w-[28%] min-w-0 items-center gap-3">
+    <footer className="flex shrink-0 flex-col gap-2 border-t border-line bg-surface px-3 py-2.5 sm:h-[92px] sm:flex-row sm:items-center sm:gap-4 sm:px-4 sm:py-0">
+      <div className="flex min-w-0 flex-1 items-center gap-3 sm:w-[28%]">
         {current ? (
           <>
             <Artwork
               src={current.cover_url}
               title={current.title}
               seed={current.id}
-              className="h-14 w-14"
+              className="h-12 w-12 sm:h-14 sm:w-14"
               rounded="rounded-lg"
             />
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <Link
                 to={current.album_id ? `/album/${current.album_id}` : '#'}
                 className="block truncate text-sm font-semibold hover:underline"
@@ -107,32 +107,43 @@ export function PlayerBar() {
                 {current.artist?.name ?? 'Unknown Artist'}
               </Link>
             </div>
-            <LikeButton liked={liked} onToggle={() => void handleLike()} className="ml-1" />
+            <LikeButton liked={liked} onToggle={() => void handleLike()} />
+            <button
+              onClick={() => setQueueOpen(true)}
+              aria-label="Open queue"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-faint hover:bg-white/[0.06] hover:text-fg sm:hidden"
+            >
+              <ListMusic size={18} />
+            </button>
           </>
         ) : (
-          <div className="text-sm text-faint">Pick something to play</div>
+          <div className="truncate text-sm text-faint">Pick something to play</div>
         )}
       </div>
 
-      <div className="flex max-w-[560px] flex-1 flex-col items-center gap-1">
+      <div className="flex flex-1 flex-col items-center gap-1.5">
         <div className="flex items-center gap-5">
           <button
             onClick={toggleShuffle}
             aria-label="Toggle shuffle"
             aria-pressed={shuffle}
-            className={`relative transition-colors ${shuffle ? 'text-accent' : 'text-faint hover:text-fg'}`}
+            className={`relative hidden transition-colors sm:block ${
+              shuffle ? 'text-accent' : 'text-faint hover:text-fg'
+            }`}
           >
             <Shuffle size={17} />
-            {shuffle && <span className="absolute -bottom-1.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent" />}
+            {shuffle && (
+              <span className="absolute -bottom-1.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent" />
+            )}
           </button>
-          <button onClick={() => prev()} aria-label="Previous" className="text-muted transition-colors hover:text-fg">
+          <button onClick={() => prev()} aria-label="Previous" className="text-muted hover:text-fg">
             <SkipBack size={20} className="fill-current" />
           </button>
           <button
             onClick={toggle}
             disabled={!current}
             aria-label={isPlaying ? 'Pause' : 'Play'}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-fg text-base transition-transform hover:scale-105"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-fg text-base transition-transform hover:scale-105 disabled:opacity-60"
           >
             {isPlaying ? (
               <Pause size={18} className="fill-base" />
@@ -140,13 +151,15 @@ export function PlayerBar() {
               <Play size={18} className="ml-0.5 fill-base" />
             )}
           </button>
-          <button onClick={() => next()} aria-label="Next" className="text-muted transition-colors hover:text-fg">
+          <button onClick={() => next()} aria-label="Next" className="text-muted hover:text-fg">
             <SkipForward size={20} className="fill-current" />
           </button>
           <button
             onClick={cycleRepeat}
             aria-label={`Repeat: ${repeat}`}
-            className={`relative transition-colors ${repeat !== 'off' ? 'text-accent' : 'text-faint hover:text-fg'}`}
+            className={`relative hidden transition-colors sm:block ${
+              repeat !== 'off' ? 'text-accent' : 'text-faint hover:text-fg'
+            }`}
           >
             {repeat === 'one' ? <Repeat1 size={17} /> : <Repeat size={17} />}
             {repeat !== 'off' && (
@@ -160,7 +173,7 @@ export function PlayerBar() {
           </span>
           <Slider
             value={progressMs}
-            max={durationMs || (current?.duration_ms ?? 0)}
+            max={durationMs || current?.duration_ms || 0}
             onSeek={seek}
             label="Seek"
             className="flex-1"
@@ -171,33 +184,27 @@ export function PlayerBar() {
         </div>
       </div>
 
-      <div className="flex w-[28%] items-center justify-end gap-1.5">
+      <div className="hidden items-center justify-end gap-1.5 sm:flex sm:w-[28%]">
         <button
           onClick={() => setQueueOpen(true)}
           aria-label="Open queue"
-          className="flex h-9 w-9 items-center justify-center rounded-full text-faint transition-colors hover:bg-white/[0.06] hover:text-fg"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-faint hover:bg-white/[0.06] hover:text-fg"
         >
           <ListMusic size={18} />
         </button>
         <button
           onClick={toggleMute}
           aria-label={muted ? 'Unmute' : 'Mute'}
-          className="flex h-9 w-9 items-center justify-center rounded-full text-faint transition-colors hover:bg-white/[0.06] hover:text-fg"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-faint hover:bg-white/[0.06] hover:text-fg"
         >
           <VolumeIcon size={18} />
         </button>
-        <Slider
-          value={muted ? 0 : volume}
-          max={1}
-          onSeek={setVolume}
-          label="Volume"
-          className="w-24"
-        />
+        <Slider value={muted ? 0 : volume} max={1} onSeek={setVolume} label="Volume" className="w-24" />
         <button
           onClick={() => setFullPlayerOpen(true)}
           disabled={!current}
           aria-label="Full player"
-          className="flex h-9 w-9 items-center justify-center rounded-full text-faint transition-colors hover:bg-white/[0.06] hover:text-fg disabled:opacity-40"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-faint hover:bg-white/[0.06] hover:text-fg disabled:opacity-60"
         >
           <Maximize2 size={16} />
         </button>

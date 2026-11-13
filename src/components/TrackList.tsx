@@ -15,7 +15,7 @@ import { PlaylistPicker } from './PlaylistPicker';
 const COL = {
   index: 'w-6 shrink-0',
   title: 'min-w-0 flex-1',
-  album: 'hidden w-48 shrink-0 lg:block',
+  album: 'hidden w-56 shrink-0 lg:block',
   plays: 'hidden w-16 shrink-0 xl:block',
   like: 'w-7 shrink-0',
   duration: 'w-12 shrink-0',
@@ -244,7 +244,7 @@ function TrackRow({
                 Add to queue
               </button>
               <div className="my-1 border-t border-line" />
-              <div className="px-3.5 pb-1 pt-1.5 text-xs font-bold uppercase tracking-wider text-faint">
+              <div className="px-3.5 pb-1 pt-1.5 text-xs font-bold uppercase tracking-wider text-muted">
                 Save to playlist
               </div>
               <PlaylistPicker trackId={track.id} onDone={() => setMenuOpen(false)} />

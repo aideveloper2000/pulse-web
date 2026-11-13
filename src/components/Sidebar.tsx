@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Home, Search, LibraryBig, LogOut, Plus, Upload, AudioLines } from 'lucide-react';
+import { Home, Search, LibraryBig, LogOut, Plus, Upload, AudioLines, ListMusic } from 'lucide-react';
 import type { Playlist } from '../lib/types';
 import { fetchMyPlaylists } from '../lib/api';
 import { useAuthUser } from '../lib/useAuth';
@@ -50,7 +50,7 @@ export function Sidebar({ playlists, refreshPlaylists }: SidebarProps) {
   };
 
   return (
-    <aside className="flex h-full w-[248px] shrink-0 flex-col gap-2">
+    <aside className="hidden h-full w-[248px] shrink-0 flex-col gap-2 lg:flex">
       <div className="flex flex-col gap-1 rounded-xl bg-surface px-3 py-3">
         <Link to="/" className="flex items-center gap-2 px-2 py-1.5">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent text-accent-ink">
@@ -107,8 +107,9 @@ export function Sidebar({ playlists, refreshPlaylists }: SidebarProps) {
 
         <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-2">
           {playlists.length === 0 ? (
-            <div className="px-3 py-4 text-sm text-muted">
-              Create a playlist, or save a track with the ⋯ menu.
+            <div className="flex items-start gap-2.5 rounded-lg bg-white/[0.04] px-3 py-3 text-sm text-muted">
+              <ListMusic size={16} className="mt-0.5 shrink-0 text-faint" />
+              <span>Create a playlist, or save any track from its menu.</span>
             </div>
           ) : (
             playlists.map((playlist) => (

@@ -4,6 +4,7 @@ import type { Playlist } from './lib/types';
 import { fetchMyPlaylists } from './lib/api';
 import { useAuthUser } from './lib/useAuth';
 import { Sidebar } from './components/Sidebar';
+import { MobileNav } from './components/MobileNav';
 import { TopBar } from './components/TopBar';
 import { PlayerBar } from './components/PlayerBar';
 import { PlayerEngine } from './components/PlayerEngine';
@@ -74,6 +75,7 @@ function MainLayout() {
         </main>
       </div>
       <PlayerBar />
+      <MobileNav />
       <QueuePanel />
       <FullPlayer />
       <Toaster />

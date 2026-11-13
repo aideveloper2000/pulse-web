@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ChevronRight, Pause, Play } from 'lucide-react';
+import { ChevronRight, Music2, Pause, Play } from 'lucide-react';
 import type { Album, Artist, Playlist } from '../lib/types';
 import { pluralise } from '../lib/format';
 import { Artwork } from './Artwork';
@@ -30,7 +30,7 @@ export function Section({ title, subtitle, actionTo, actionLabel, children }: Se
           </Link>
         )}
       </div>
-      <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">{children}</div>
+      <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar scroll-fade">{children}</div>
     </section>
   );
 }
@@ -53,7 +53,7 @@ export function AlbumCard({ album, onPlay, playing }: AlbumCardProps) {
           title={album.title}
           seed={album.id}
           className="aspect-square w-full"
-          rounded="rounded-lg"
+          rounded="rounded-xl"
         />
         {onPlay && (
           <button
@@ -122,7 +122,7 @@ export function PlaylistCard({ playlist, tracks }: PlaylistCardProps) {
         title={playlist.name}
         seed={playlist.id}
         className="aspect-square w-full"
-        rounded="rounded-lg"
+        rounded="rounded-xl"
       />
       <div className="min-w-0">
         <div className="truncate text-sm font-semibold">{playlist.name}</div>
@@ -171,14 +171,22 @@ export function GenreCard({ genre, count }: GenreCardProps) {
   return (
     <Link
       to={`/genre/${encodeURIComponent(genre)}`}
-      className="relative aspect-[1.6/1] shrink-0 overflow-hidden rounded-xl p-4 transition-transform duration-200 hover:scale-[1.02]"
-      style={{ width: 220, background: genreColor(genre) }}
+      className="group flex items-center gap-3 rounded-xl border border-line bg-raised p-3.5 transition-colors hover:border-white/[0.14] hover:bg-overlay"
     >
-      <span className="text-lg font-bold leading-tight text-white drop-shadow-sm">{genre}</span>
-      <span className="absolute bottom-3 left-4 text-xs font-medium text-white/85">
-        {pluralise(count, 'track')}
+      <span
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg"
+        style={{ background: genreColor(genre) }}
+      >
+        <Music2 size={19} className="text-white" />
       </span>
-      <div className="absolute -bottom-5 -right-5 h-20 w-20 rotate-12 rounded-lg bg-black/20" />
+      <span className="min-w-0">
+        <span className="block truncate text-sm font-bold">{genre}</span>
+        <span className="block truncate text-xs text-muted">{pluralise(count, 'track')}</span>
+      </span>
+      <ChevronRight
+        size={16}
+        className="ml-auto shrink-0 text-faint transition-transform group-hover:translate-x-0.5 group-hover:text-fg"
+      />
     </Link>
   );
 }

@@ -11,7 +11,6 @@ import { useLikedTracks } from '../lib/useLikedTracks';
 import { useToasts } from '../store/toast';
 import { Artwork } from '../components/Artwork';
 import { TrackList } from '../components/TrackList';
-import { coverGradient } from '../lib/format';
 
 export function PlaylistPage() {
   const { id } = useParams();
@@ -157,7 +156,7 @@ export function PlaylistPage() {
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end">
         <div
           className="flex h-52 w-52 shrink-0 items-center justify-center rounded-xl shadow-pop"
-          style={{ background: coverGradient(playlist.id) }}
+          style={{ background: 'linear-gradient(135deg, #1c1c26 0%, #14141c 100%)' }}
         >
           {playlist.cover_url ? (
             <Artwork
@@ -168,7 +167,7 @@ export function PlaylistPage() {
               rounded="rounded-xl"
             />
           ) : (
-            <ListMusic size={56} className="text-white/80" />
+            <ListMusic size={56} className="text-faint" />
           )}
         </div>
         <div className="min-w-0">

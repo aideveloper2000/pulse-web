@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, CircleUserRound, LogOut, Search, Upload } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LogOut, Search, Upload } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuthUser } from '../lib/useAuth';
 
@@ -24,8 +24,8 @@ export function TopBar() {
   };
 
   return (
-    <header className="relative z-30 flex h-16 shrink-0 items-center gap-3 px-5">
-      <div className="flex items-center gap-2">
+    <header className="relative z-30 flex h-16 shrink-0 items-center gap-3 px-3 sm:px-5">
+      <div className="flex items-center gap-2 max-md:hidden">
         <button
           onClick={() => window.history.back()}
           disabled={location.key === 'default'}
@@ -80,7 +80,7 @@ export function TopBar() {
                 <div className="truncate text-sm font-semibold">
                   {user.user_metadata?.display_name ?? 'Pulse listener'}
                 </div>
-                <div className="truncate text-xs text-faint">{user.email}</div>
+                <div className="truncate text-xs text-muted">{user.email}</div>
               </div>
               <Link
                 to="/upload"
@@ -101,13 +101,6 @@ export function TopBar() {
           </>
         )}
       </div>
-
-      {!user && (
-        <Link to="/auth" className="flex items-center gap-1.5 text-sm font-medium text-muted hover:text-fg">
-          <CircleUserRound size={17} />
-          Account
-        </Link>
-      )}
     </header>
   );
 }

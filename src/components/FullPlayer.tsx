@@ -138,7 +138,7 @@ export function FullPlayer() {
               <button
                 onClick={toggle}
                 aria-label={isPlaying ? 'Pause' : 'Play'}
-                className="flex h-14 w-14 items-center justify-center rounded-full bg-fg text-base transition-transform hover:scale-105"
+                className="flex h-14 w-14 items-center justify-center rounded-full bg-fg text-base transition-transform hover:scale-105 disabled:opacity-60"
               >
                 {isPlaying ? <Pause size={24} className="fill-base" /> : <Play size={24} className="ml-1 fill-base" />}
               </button>
